@@ -1,36 +1,56 @@
-# 📘 README — Service Duplicati (Sauvegardes) — Classe SISR
+# Service Duplicati
 
-## 📌 Présentation
-Duplicati est un service de sauvegarde permettant de protéger les données du serveur grâce à des sauvegardes chiffrées et automatisées.  
-Dans le cadre de la classe SISR, il sera intégré dans le **docker-compose global**, aux côtés d’autres conteneurs pédagogiques.
+## Vue d'ensemble
 
-Ce service permet d’assurer la sauvegarde régulière de répertoires importants, tels que `/home`, vers un espace dédié sur le serveur.
+Duplicati est une solution de sauvegarde chiffrée et automatisée déployée dans un environnement Docker. Elle assure la protection régulière des données critiques via des sauvegardes sécurisées et isolées.
 
----
+## Fonctionnalités
 
-## 🏗️ Description du service
+Le service Duplicati (image LinuxServer.io) offre :
 
-Le service Duplicati utilise l’image officielle LinuxServer.io et est configuré pour :
+- Interface web de gestion accessible sur le port **8200**
+- Sauvegarde automatisée et chiffrée des répertoires importants
+- Stockage isolé de la configuration et des sauvegardes en volumes dédiés
+- Authentification par mot de passe administrateur
+- Clé de chiffrement pour la sécurisation des paramètres internes
+- Redémarrage automatique en cas d'indisponibilité
 
-- proposer une interface web accessible sur le port **8200**,  
-- stocker la configuration dans un répertoire dédié (`/var/duplicati/config`),  
-- enregistrer les sauvegardes dans `/var/duplicati/backups`,  
-- accéder au dossier `/home` du serveur afin de l’inclure dans les sauvegardes,  
-- utiliser un mot de passe administrateur défini dans les variables d’environnement,  
-- protéger les paramètres internes grâce à une clé de chiffrement,  
-- redémarrer automatiquement en cas d'arrêt du conteneur.
+## Architecture
 
----
+| Composant | Détails |
+|-----------|---------|
+| **Image** | LinuxServer.io - Duplicati |
+| **Port** | 8200 |
+| **Volumes** | Configuration, sauvegardes, répertoire `/home` |
+| **Sécurité** | Authentification, chiffrement des données |
+| **Persistance** | Volumes dédiés pour les sauvegardes et la configuration |
 
-## 🔐 Sécurité
+## Installation et déploiement
 
-- L’accès à l’interface web est sécurisé par un mot de passe administrateur.  
-- Une clé de chiffrement protège la configuration interne du service.  
-- Les sauvegardes et la configuration sont isolées dans des volumes dédiés pour éviter les risques de perte de données.
+### Démarrage du service
 
----
+Le service Duplicati est fourni dans le fichier `docker-compose.yml` et peut être lancé facilement :
 
-## 📘 Intégration dans le docker-compose de la classe
+```bash
+docker compose up -d
+```
 
-Ce service sera intégré au **fichier docker-compose commun de la classe**, aux côtés d’autres services tels que les serveurs web, bases de données, outils d’administration ou plateformes pédagogiques.  
-Cette intégration permet à l’ensemble de l’infrastructure d’être cohérente, centralisée et facilement déployable, tout en illustrant la mise en place réelle d’une solution de sauvegarde au sein d’un environnement Docker.
+Cette commande démarre le conteneur Duplicati ainsi que tous les autres services définis dans la composition Docker.
+
+### Accès à l'interface
+
+Une fois le service actif, l'interface de gestion est accessible via :
+
+```
+http://37.64.159.66:8200
+```
+
+## Sécurité
+
+- **Authentification** : L'accès à l'interface web est protégé par un mot de passe administrateur
+- **Chiffrement** : Une clé de chiffrement sécurise la configuration interne
+- **Isolation** : Les données sont stockées dans des volumes Docker isolés et persistants
+
+## Intégration infrastructure
+
+Ce service s'intègre dans une architecture Docker multi-conteneurs aux côtés d'autres services (serveurs web, bases de données, outils d'administration). Cette approche garantit une infrastructure cohérente, centralisée et facilement déployable pour l'environnement pédagogique SISR.
